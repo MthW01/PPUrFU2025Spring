@@ -12,6 +12,7 @@ public class Claw : MonoBehaviour
     [SerializeField] private float _value;
     [SerializeField] private float _delta = 1f;
     [SerializeField] private Vector3 _axis = new Vector3(0, 1, 0);
+    public bool Fixed = false;
     [field: SerializeField] public bool Active { get; set; }
 
     private float Max => Mathf.Max(_activeValue, _inactiveValue);
@@ -19,6 +20,15 @@ public class Claw : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!Active && Fixed)
+        {
+            return;
+        }
+        else if (Fixed)
+        {
+            Fixed = false;
+        }
+
         var cached = _value;
         var target = Active ? _activeValue : _inactiveValue;
         if (_value > target)

@@ -3,8 +3,10 @@ using UnityEngine.InputSystem;
 
 public class AxisRotation : MonoBehaviour
 {
-    [SerializeField] private InputAction _increase;
-    [SerializeField] private InputAction _decreace;
+    [SerializeField] public InputAction Increase;
+    [SerializeField] public InputAction Decreace;
+    [SerializeField] public bool IncreaceThisFrame = false;
+    [SerializeField] public bool DecreaceThisFrame = false;
     [SerializeField] private float _delta = 1f;
     [SerializeField] private float _max = 1f;
     [SerializeField] private float _min = -1f;
@@ -13,18 +15,18 @@ public class AxisRotation : MonoBehaviour
 
     private void Start()
     {
-        _increase.Enable();
-        _decreace.Enable();
+        Increase.Enable();
+        Decreace.Enable();
     }
 
     void FixedUpdate()
     {
         var cached = _value;
-        if (_increase.IsPressed())
+        if (Increase.IsPressed() || IncreaceThisFrame)
         {
             _value = Mathf.Clamp(_value + _delta * Time.fixedDeltaTime, _min, _max);
         }
-        if (_decreace.IsPressed())
+        if (Decreace.IsPressed() || DecreaceThisFrame)
         {
             _value = Mathf.Clamp(_value - _delta * Time.fixedDeltaTime, _min, _max);
         }
@@ -34,5 +36,7 @@ public class AxisRotation : MonoBehaviour
         {
             transform.Rotate(_axis * diff);
         }
+        IncreaceThisFrame = false;
+        DecreaceThisFrame = false;
     }
 }

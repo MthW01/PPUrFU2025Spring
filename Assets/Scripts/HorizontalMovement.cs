@@ -3,6 +3,8 @@ using UnityEngine.InputSystem;
 
 public class HorizontalMovement : MonoBehaviour
 {
+    public bool MoveForwardThisFrame = false;
+    [SerializeField] private Rigidbody _rb;
     [SerializeField] private InputAction _moveForward;
     [SerializeField] private InputAction _moveBackward;
     [SerializeField] private float _decceleration = 1f;
@@ -22,7 +24,7 @@ public class HorizontalMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (_moveForward.IsPressed())
+        if (_moveForward.IsPressed() || MoveForwardThisFrame)
         {
             Speed = Mathf.Clamp(Speed + _accelerationForward, -_maxSpeedBackward, _maxSpeedForward);
         }
@@ -42,7 +44,13 @@ public class HorizontalMovement : MonoBehaviour
 
         if (Speed != 0)
         {
-            transform.position += transform.forward * Speed * Time.fixedDeltaTime;
+            //transform.position += transform.forward * Speed * Time.fixedDeltaTime;
+            _rb.linearVelocity = transform.forward * Speed * Time.fixedDeltaTime * 100f;
         }
+        else
+        {
+            _rb.linearVelocity = Vector3.zero;
+        }
+        MoveForwardThisFrame = false;
     }
 }
